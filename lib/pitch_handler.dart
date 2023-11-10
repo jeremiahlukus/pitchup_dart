@@ -17,20 +17,7 @@ class PitchHandler {
       case InstrumentType.guitar:
         _minimumPitch = 80.0;
         _maximumPitch = 1050.0;
-        _noteStrings = [
-          "C",
-          "C#",
-          "D",
-          "D#",
-          "E",
-          "F",
-          "F#",
-          "G",
-          "G#",
-          "A",
-          "A#",
-          "B"
-        ];
+        _noteStrings = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
         break;
     }
   }
@@ -41,11 +28,9 @@ class PitchHandler {
       final expectedFrequency = _frequencyFromNoteNumber(_midiFromPitch(pitch));
       final diff = _diffFromTargetedNote(pitch);
       final tuningStatus = _getTuningStatus(diff);
-      final diffCents =
-          _diffInCents(expectedFrequency, expectedFrequency - diff);
+      final diffCents = _diffInCents(expectedFrequency, expectedFrequency - diff);
 
-      return PitchResult(
-          noteLiteral, tuningStatus, expectedFrequency, diff, diffCents);
+      return PitchResult(noteLiteral, tuningStatus, expectedFrequency, diff, diffCents);
     }
 
     return PitchResult("", TuningStatus.undefined, 0.00, 0.00, 0.00);
@@ -57,8 +42,7 @@ class PitchHandler {
 
   String _noteFromPitch(double frequency) {
     final noteNum = 12.0 * (log((frequency / 440.0)) / log(2.0));
-    return _noteStrings[
-        ((noteNum.roundToDouble() + 69.0).toInt() % 12.0).toInt()];
+    return _noteStrings[((noteNum.roundToDouble() + 69.0).toInt() % 12.0).toInt()];
   }
 
   double _diffFromTargetedNote(double pitch) {
@@ -71,16 +55,24 @@ class PitchHandler {
   }
 
   TuningStatus _getTuningStatus(double diff) {
-    if (diff >= -0.3 && diff <= 0.3) {
+    if (diff >= -0.1 && diff <= 0.1) {
+      return TuningStatus.perfectlyTuned;
+    } else if (diff > -0.3 && diff < 0.3) {
+      return TuningStatus.wellTuned;
+    } else if (diff >= -0.5 && diff <= 0.5) {
       return TuningStatus.tuned;
-    } else if (diff >= -1.0 && diff <= 0.0) {
-      return TuningStatus.toohigh;
-    } else if (diff > 0.0 && diff <= 1.0) {
-      return TuningStatus.toolow;
-    } else if (diff >= double.negativeInfinity && diff <= -1.0) {
-      return TuningStatus.waytoohigh;
+    } else if (diff > -1.0 && diff < 0.0) {
+      return TuningStatus.slightlyHigh;
+    } else if (diff > 0.0 && diff < 1.0) {
+      return TuningStatus.slightlyLow;
+    } else if (diff >= -2.0 && diff < -1.0) {
+      return TuningStatus.tooHigh;
+    } else if (diff > 1.0 && diff <= 2.0) {
+      return TuningStatus.tooLow;
+    } else if (diff < -2.0) {
+      return TuningStatus.wayTooHigh;
     } else {
-      return TuningStatus.waytoolow;
+      return TuningStatus.wayTooLow;
     }
   }
 

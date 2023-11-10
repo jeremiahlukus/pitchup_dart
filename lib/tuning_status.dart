@@ -1,3 +1,14 @@
 library pitchupdart;
 
-enum TuningStatus { tuned, toolow, toohigh, waytoolow, waytoohigh, undefined }
+enum TuningStatus {
+  perfectlyTuned,
+  wellTuned,
+  tuned,
+  slightlyHigh,
+  slightlyLow,
+  tooHigh,
+  tooLow,
+  wayTooHigh,
+  wayTooLow,
+  undefined
+}
