@@ -8,15 +8,29 @@ import 'package:pitchupdart/tuning_status.dart';
 
 class PitchHandler {
   final InstrumentType _instrumentType;
+  final String? selectedNote;
   dynamic _minimumPitch;
   dynamic _maximumPitch;
   dynamic _noteStrings;
 
-  PitchHandler(this._instrumentType) {
+  static const Map<String, double> _noteFrequencies = {
+    'E4': 329.63,
+    'B3': 246.94,
+    'G3': 196.00,
+    'D3': 146.83,
+    'A2': 110.00,
+    'E2': 82.41,
+  };
+
+  PitchHandler(this._instrumentType, {this.selectedNote}) {
     switch (_instrumentType) {
       case InstrumentType.guitar:
-        _minimumPitch = 80.0;
-        _maximumPitch = 1050.0;
+        if (selectedNote != null && _noteFrequencies.containsKey(selectedNote)) {
+          _minimumPitch = _maximumPitch = _noteFrequencies[selectedNote];
+        } else {
+          _minimumPitch = 80.0;
+          _maximumPitch = 1050.0;
+        }
         _noteStrings = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
         break;
     }
