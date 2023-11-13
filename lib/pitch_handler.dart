@@ -36,6 +36,7 @@ class PitchHandler {
     print('Handling pitch: $pitch');
     var expectedFrequency = 0.0;
     if (selectedNote != null && _noteFrequencies.containsKey(selectedNote)) {
+      print('Setting $selectedNote : ${_noteFrequencies[selectedNote]}');
       expectedFrequency = _noteFrequencies[selectedNote] as double;
     }
     if (_isPitchInRange(pitch)) {
