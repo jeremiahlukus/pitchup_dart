@@ -25,21 +25,25 @@ class PitchHandler {
   PitchHandler(this._instrumentType, {this.selectedNote}) {
     switch (_instrumentType) {
       case InstrumentType.guitar:
-        if (selectedNote != null && _noteFrequencies.containsKey(selectedNote)) {
-          _minimumPitch = _maximumPitch = _noteFrequencies[selectedNote];
-        } else {
-          _minimumPitch = 80.0;
-          _maximumPitch = 1050.0;
-        }
+        _minimumPitch = 80.0;
+        _maximumPitch = 1050.0;
         _noteStrings = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
         break;
     }
   }
 
   PitchResult handlePitch(double pitch) {
+    print('Handling pitch: $pitch');
+    var expectedFrequency = 0.0;
+    if (selectedNote != null && _noteFrequencies.containsKey(selectedNote)) {
+      expectedFrequency = _noteFrequencies[selectedNote] as double;
+    }
     if (_isPitchInRange(pitch)) {
       final noteLiteral = _noteFromPitch(pitch);
-      final expectedFrequency = _frequencyFromNoteNumber(_midiFromPitch(pitch));
+      if (expectedFrequency != 0.0) {
+        expectedFrequency = _frequencyFromNoteNumber(_midiFromPitch(pitch));
+      }
+      print('Expected Frequency: $expectedFrequency');
       final diff = _diffFromTargetedNote(pitch);
       final tuningStatus = _getTuningStatus(diff);
       final diffCents = _diffInCents(expectedFrequency, expectedFrequency - diff);
