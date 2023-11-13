@@ -34,16 +34,16 @@ class PitchHandler {
 
   PitchResult handlePitch(double pitch) {
     print('Handling pitch: $pitch');
-    var expectedFrequency = 0.0;
-    if (selectedNote != null && _noteFrequencies.containsKey(selectedNote)) {
-      print('Setting $selectedNote : ${_noteFrequencies[selectedNote]}');
-      expectedFrequency = _noteFrequencies[selectedNote] as double;
-    }
     if (_isPitchInRange(pitch)) {
-      final noteLiteral = _noteFromPitch(pitch);
-      if (expectedFrequency != 0.0) {
+      var expectedFrequency = 0.0;
+      if (selectedNote != null && _noteFrequencies.containsKey(selectedNote)) {
+        print('Setting $selectedNote : ${_noteFrequencies[selectedNote]}');
+        expectedFrequency = _noteFrequencies[selectedNote] as double;
+      } else {
+        print('Auto Detecting note');
         expectedFrequency = _frequencyFromNoteNumber(_midiFromPitch(pitch));
       }
+      final noteLiteral = _noteFromPitch(pitch);
       print('Expected Frequency: $expectedFrequency');
       final diff = _diffFromTargetedNote(pitch);
       final tuningStatus = _getTuningStatus(diff);
